@@ -1,0 +1,8 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS invalid join rejected
+PASS invalid join creates no peer
+PASS loopback host waiting
+PASS waiting disables host/join
+PASS host peer active
+RESULT failures=0; lobby only, no connected match tested

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>Multiplayer Pong GDD deck</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<!-- walker-networking-multiplayer-pong · GDD 0.1.0-recovered · 2026-09-27 · Zelda (agent, silent) for Nik Bear Brown · gate — unsigned at time of writing -->
+<style>
+:root{--bg:#faf9f5;--ink:#25354a;--muted:#5b6b7c;--teal:#287c68;--red:#d24e42;--card:#fffdf7;--rule:#dcdfd8}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Helvetica,Arial,sans-serif}
+.slide{display:none;min-height:100vh;box-sizing:border-box;padding:52px 72px 64px;max-width:1360px;margin:0 auto}
+.slide.on{display:block}
+h1{font-size:46px;margin:0 0 12px;line-height:1.1}h2{font-size:34px;margin:0 0 16px}
+.kicker{color:var(--muted);font-size:15px;letter-spacing:.05em;text-transform:uppercase;margin-bottom:16px}
+p,li{font-size:22px;line-height:1.45}li{margin:8px 0}
+.cap{color:var(--muted);font-size:15px;margin-top:8px}
+img{max-width:100%;border:1px solid var(--rule);background:#fff;display:block}
+.shot{max-width:640px;image-rendering:pixelated}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start}
+.tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:13px;font-weight:700;letter-spacing:.03em;margin-right:6px;vertical-align:middle}
+.obs{background:#e2f0eb;color:var(--teal);border:1.5px solid var(--teal)}
+.prop{background:#fcebe8;color:var(--red);border:1.5px dashed var(--red)}
+.miss{background:#eef1f4;color:var(--ink);border:1.5px dotted var(--muted)}
+table{border-collapse:collapse;font-size:18px;width:100%}td,th{border-bottom:1px solid var(--rule);padding:8px 10px;text-align:left;vertical-align:top}th{color:var(--muted);font-weight:600}
+.big{font-size:104px;font-weight:700;color:var(--red);line-height:1}
+.box{border:2px solid var(--teal);border-radius:10px;padding:14px 18px;background:var(--card)}
+.box.dash{border:2px dashed var(--red)}
+.zelda{border-left:6px solid var(--ink);padding-left:20px}
+nav{position:fixed;bottom:14px;right:22px;color:var(--muted);font-size:14px}
+@media(max-width:820px){.slide{padding:24px 16px 56px}.grid{grid-template-columns:1fr}h1{font-size:30px}h2{font-size:24px}p,li{font-size:17px}.big{font-size:60px}table{font-size:15px}}
+</style></head><body>
+
+<section class="slide on">
+<div class="kicker">walker-networking-multiplayer-pong · GDD 0.1.0-recovered · 2026-09-27 · Zelda, silent</div>
+<h1>This is a networking demo wearing a Pong costume.</h1>
+<p>The official Godot two-peer Pong sample, copied into Walker with a title change and one loopback flag. It demonstrates who owns what on the wire. It is not a game design, and nothing here approves one.</p>
+<p><span class="tag obs">OBSERVED</span> in code or logs &nbsp; <span class="tag prop">PROPOSED</span> does not exist &nbsp; <span class="tag miss">MISSING</span> nobody has decided</p>
+<p class="cap">No gate is signed. Zero human playtests. Arrow keys or space to advance. Argument lives in GDD.md; slides carry the claim.</p>
+</section>
+
+<section class="slide">
+<div class="kicker">What exists · GDD §1, §13</div>
+<h2>Four scripts, four scenes, one upstream screenshot</h2>
+<div class="grid">
+<div>
+<img class="shot" src="../godot/screenshots/pong_multiplayer.png" alt="Upstream screenshot of the match scene">
+<p class="cap"><span class="tag obs">OBSERVED</span> godot/screenshots/pong_multiplayer.png, 640×400. Upstream's image, not a Walker capture. Walker's capture and both films are pending under a shared capture blocker (README.md:11).</p>
+</div>
+<ul>
+<li><b>lobby.gd</b> host / join / disconnect, ENet UDP 8910, max 1 peer</li>
+<li><b>pong.gd</b> authority split, score, win at 10</li>
+<li><b>paddle.gd</b> input, unreliable position push</li>
+<li><b>ball.gd</b> local flight, bounce and reset RPCs</li>
+<li>Godot 4.7 features, logs on 4.7.2, gl_compatibility</li>
+<li>No autoloads, no named layers, no audio, no class_name</li>
+</ul>
+</div>
+</section>
+
+<section class="slide">
+<div class="kicker">What it demonstrates · GDD §5 M-04, §6</div>
+<h2>Each peer is the judge of its own goal line</h2>
+<ul>
+<li><span class="tag obs">OBSERVED</span> Host owns Player1 and the Ball; client owns Player2 (pong.gd:20-25).</li>
+<li><span class="tag obs">OBSERVED</span> Ball flies locally on both peers; only bounces and resets cross the wire (ball.gd:13-17).</li>
+<li><span class="tag obs">OBSERVED</span> Host alone scores x &lt; 0; client alone scores x &gt; 640 (ball.gd:24-41).</li>
+</ul>
+<p>Fair under lag. Also means each peer can award points unchecked.</p>
+<img src="diagrams/authority-rpc.svg" alt="Authority and RPC map">
+</section>
+
+<section class="slide">
+<div class="kicker">The loop · GDD §3</div>
+<h2>Lobby → match → winner → lobby</h2>
+<img src="diagrams/session-flow.svg" alt="Session and match flow">
+<p class="cap">Solid = code path. "verified" = a 2026-09-24 log shows it. Dashed red = proposed tests T-10..T-12 for the three unlogged exits.</p>
+</section>
+
+<section class="slide">
+<div class="kicker">Features and priority · GDD §11</div>
+<h2>CORE is <span style="color:var(--red)">50%</span>, and that is honest</h2>
+<div class="grid">
+<table><tr><th>ID</th><th>Feature</th><th>Priority</th></tr>
+<tr><td>F-01</td><td>Host / join over ENet</td><td>CORE</td></tr>
+<tr><td>F-02</td><td>Paddle authority split</td><td>CORE</td></tr>
+<tr><td>F-03</td><td>Paddle input + replication</td><td>CORE</td></tr>
+<tr><td>F-04</td><td>Local ball + synced bounce</td><td>CORE</td></tr>
+<tr><td>F-05</td><td>Split goal-line scoring</td><td>CORE</td></tr>
+<tr><td>F-06..F-08</td><td>Win/exit · disconnect · loopback flag</td><td>SHOULD</td></tr>
+<tr><td>F-09..F-10</td><td>"You" label · public-IP link</td><td>NICE</td></tr></table>
+<div><div class="big">5 / 10</div>
+<p>Over the 40% line. The demo <i>is</i> its core; nothing can go without losing the point. Priorities are inferred, the cut-or-extend call is <span class="tag miss">MISSING</span> Q-06.</p></div>
+</div>
+</section>
+
+<section class="slide">
+<div class="kicker">Verification evidence · GDD §16 · *-20260924.log</div>
+<h2>Loopback happy path: yes. Everything else: no.</h2>
+<table><tr><th>Log</th><th>Shows</th><th>Result</th></tr>
+<tr><td>lobby-fixed</td><td>invalid join rejected, loopback host waiting</td><td><span class="tag obs">5 PASS</span></td></tr>
+<tr><td>match-host / -client</td><td>authority, W/S to clamps, natural misses 1–1, host sees disconnect</td><td><span class="tag obs">9 / 7 PASS</span></td></tr>
+<tr><td>terminal-host / -client</td><td>left-paddle bounce, win via a score-9 fixture, Exit restores lobby</td><td><span class="tag obs">7 / 7 PASS</span></td></tr>
+<tr><td>lobby (first)</td><td>harness targeted the wrong node</td><td>test bug, fixed in test</td></tr></table>
+<p><b>Not verified:</b> right-paddle bounce, left winner, a natural ten-point match, client-side "Server disconnected.", "Couldn't connect.", "address in use", latency, WAN, security, rendered footage.</p>
+</section>
+
+<section class="slide">
+<div class="kicker">Top 3 risks · GDD §14</div>
+<h2>What bites first</h2>
+<ol>
+<li><b>R-01 Any peer can score.</b> Four of five RPCs are <code>any_peer</code> with no sender check. <span class="tag miss">MISSING</span> Q-07 trust model.</li>
+<li><b>R-04 A fixture gets remembered as a match.</b> The terminal test forced score 9. Six branches have no log. <span class="tag prop">PROPOSED</span> T-07..T-12.</li>
+<li><b>R-02 Ball copies drift.</b> Local dead reckoning, loopback only, no acceptance limit. <span class="tag miss">MISSING</span> Q-08.</li>
+</ol>
+<div class="box dash"><span class="tag prop">PROPOSED</span> T-14: a rogue client calls <code>update_score.rpc</code> directly. It documents R-01; it does not fix it.</div>
+</section>
+
+<section class="slide">
+<div class="kicker">Open questions · GDD §15 · decisions.md</div>
+<h2>Twelve open, none decided</h2>
+<table><tr><th>#</th><th>Question</th></tr>
+<tr><td>Q-01 · Q-02</td><td>Why Walker keeps this demo · who the "player" is</td></tr>
+<tr><td>Q-03 · Q-04</td><td>Pillars · PX goals</td></tr>
+<tr><td>Q-05 · Q-06</td><td>Faithful copy or extend · CORE 50% cut or extend</td></tr>
+<tr><td>Q-07 · Q-08</td><td>Trust model for any_peer RPCs · acceptable ball drift</td></tr>
+<tr><td>Q-09 · Q-10</td><td>Are upstream tuning numbers Walker's design · what evidence closes the item</td></tr>
+<tr><td>Q-11 · Q-12</td><td>Keep the icanhazip.com link · track or freeze upstream</td></tr></table>
+<p class="cap">Owner of every row: Nik Bear Brown.</p>
+</section>
+
+<section class="slide">
+<div class="kicker">Zelda's read · silent mode</div>
+<h2 class="zelda">A good demo and a non-design</h2>
+<ul class="zelda">
+<li>Ghost Center, as expected. The code has a technical center and no reason to exist in Walker on paper.</li>
+<li>Split goal-line authority is the one interesting idea and the one real hole: fair under lag, trivially cheatable.</li>
+<li>The verification is careful and says what it did not do. Keep it that way in every write-up.</li>
+<li><b>First fix: answer Q-01 and Q-10.</b> Until then every further test is motion without a finish line.</li>
+</ul>
+</section>
+
+<nav id="n"></nav>
+<script>
+var s=document.querySelectorAll('.slide'),i=0,n=document.getElementById('n');
+function go(k){s[i].classList.remove('on');i=(k+s.length)%s.length;s[i].classList.add('on');n.textContent=(i+1)+' / '+s.length;window.scrollTo(0,0);if(location.hash!=='#'+(i+1))history.replaceState(null,'','#'+(i+1))}
+function fromHash(){var h=parseInt(location.hash.slice(1),10);return isNaN(h)?null:h-1}
+var h0=fromHash();go(h0!==null?h0:0);
+window.addEventListener('hashchange',function(){var h=fromHash();if(h!==null&&h!==i)go(h)});
+document.addEventListener('keydown',function(e){if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();go(i+1)}if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(i-1)}if(e.key==='Home')go(0);if(e.key==='End')go(s.length-1)});
+document.addEventListener('click',function(e){if(e.target.closest('a'))return;if(e.clientX>innerWidth*0.7)go(i+1);else if(e.clientX<innerWidth*0.3)go(i-1)});
+</script>
+</body></html>

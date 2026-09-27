@@ -1,0 +1,14 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+Unique id: 1
+PASS connected match exists
+PASS player1 server authority
+PASS player2 client authority
+PASS host input and replication reach top clamp
+PASS client input and replication reach bottom clamp
+SCORES 1 1
+PASS natural misses score on both peers
+PASS score labels follow state
+PASS disconnect removes match
+PASS disconnect restores lobby
+RESULT host=true failures=0

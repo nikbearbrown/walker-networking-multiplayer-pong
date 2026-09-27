@@ -1,0 +1,11 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+Unique id: 1
+PASS actual left paddle collision reverses ball
+PASS bounce accelerates normalized direction
+PASS bounce does not score
+PASS terminal score replicates from boundary fixture
+PASS correct winner shown
+PASS ball stopped and exit offered
+PASS exit restores lobby on both peers
+RESULT terminal host=true failures=0

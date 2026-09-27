@@ -1,0 +1,22 @@
+{
+  "game": "walker-networking-multiplayer-pong",
+  "kind": "tech-demo",
+  "mode": "recovered",
+  "revision": 1,
+  "design_version": "0.1.0-recovered",
+  "date": "2026-09-27",
+  "gate_note": "gate — unsigned at time of writing",
+  "recovered_from": {"path": "godot", "upstream": "Godot networking/multiplayer_pong @ a3b5c113112f77291d5f3d1360f33a882fdc52f7", "pass": "reverse, silent", "git_read": false},
+  "engine": {"name": "godot", "version": "4.7 (config/features); logs 4.7.2.stable", "renderer": "gl_compatibility"},
+  "gates": {
+    "vision":  {"signed_by": null, "date": null, "revision": null},
+    "systems": {"signed_by": null, "date": null, "revision": null},
+    "world":   {"signed_by": null, "date": null, "revision": null},
+    "scope":   {"signed_by": null, "date": null, "revision": null}
+  },
+  "core_percentage": {"core": 5, "total": 10, "percent": 50, "over_limit": true, "decision": "Q-06 open"},
+  "edu_track": false,
+  "human_playtests": 0,
+  "missing_count": 12,
+  "notes": "Silent recovery. Nothing here is approved. Gates are signed by humans only."
+}

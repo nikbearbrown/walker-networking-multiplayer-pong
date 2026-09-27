@@ -1,0 +1,32 @@
+# Engine caches and local editor state
+.godot/
+.DS_Store
+.idea/
+.vscode/
+
+# Generated media, captures and films stay out of source control
+/evidence/
+/youtube/
+/_work/
+**/_qc/
+**/capture/frames/
+exports/
+builds/
+*.[mM][pP]4
+*.[mM][oO][vV]
+*.avi
+*.[mM][pP]3
+*.wav
+# ...but the game's own audio assets under godot/ are required to run it
+!/godot/**/*.wav
+!/godot/**/*.[mM][pP]3
+
+node_modules
+__pycache__/
+.venv/
+
+# Local credentials/configuration
+.env
+.env.*
+!.env.example
+/credentials/

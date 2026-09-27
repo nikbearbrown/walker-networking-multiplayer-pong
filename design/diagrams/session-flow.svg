@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="800" viewBox="0 0 1440 800" role="img" aria-labelledby="t d">
+<title id="t">Session and match flow, recovered from godot/logic/lobby.gd and pong.gd</title>
+<desc id="d">Lobby idle, hosting, connecting, match and match-over states with observed transitions solid teal and proposed tests dashed red. References F-01, F-05, F-06, F-07, M-05, M-06, M-07, T-10, T-11, T-12.</desc>
+<rect width="1440" height="800" fill="#faf9f5"/>
+<defs>
+<marker id="a" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#287c68"/></marker>
+<marker id="r" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#d24e42"/></marker>
+</defs>
+<g font-family="Helvetica, Arial, sans-serif" fill="#25354a">
+<text x="30" y="36" font-size="26" font-weight="700">Session and match flow · F-01 F-05 F-06 F-07</text>
+<text x="30" y="58" font-size="14" fill="#5b6b7c">solid teal = observed in code · "verified" = a 2026-09-24 log shows it · dashed red = proposed test, does not exist</text>
+
+<!-- states -->
+<g stroke="#287c68" stroke-width="2.5" fill="#fffdf7">
+<rect x="120" y="320" width="220" height="110" rx="14"/>
+<rect x="460" y="110" width="250" height="110" rx="14"/>
+<rect x="460" y="540" width="250" height="110" rx="14"/>
+<rect x="820" y="320" width="230" height="110" rx="14"/>
+<rect x="1140" y="320" width="240" height="110" rx="14"/>
+</g>
+<g text-anchor="middle">
+<text x="230" y="360" font-size="19" font-weight="700">LOBBY</text>
+<text x="230" y="384" font-size="13">Host / Join enabled</text>
+<text x="230" y="402" font-size="12" fill="#5b6b7c">lobby.tscn · LobbyPanel</text>
+<text x="585" y="150" font-size="19" font-weight="700">HOSTING</text>
+<text x="585" y="174" font-size="13">"Waiting for player..."</text>
+<text x="585" y="192" font-size="12" fill="#5b6b7c">buttons disabled · UDP 8910</text>
+<text x="585" y="580" font-size="19" font-weight="700">CONNECTING</text>
+<text x="585" y="604" font-size="13">"Connecting..."</text>
+<text x="585" y="622" font-size="12" fill="#5b6b7c">ENet client → IP:8910</text>
+<text x="935" y="360" font-size="19" font-weight="700">MATCH</text>
+<text x="935" y="384" font-size="13">/root/Pong, lobby hidden</text>
+<text x="935" y="402" font-size="12" fill="#5b6b7c">rallies, scoring (F-05)</text>
+<text x="1260" y="360" font-size="19" font-weight="700">MATCH OVER</text>
+<text x="1260" y="384" font-size="13">"The Winner!", ball stopped</text>
+<text x="1260" y="402" font-size="12" fill="#5b6b7c">Exit Game shown</text>
+</g>
+
+<!-- observed transitions -->
+<g stroke="#287c68" stroke-width="2.5" fill="none" marker-end="url(#a)">
+<path d="M340 345 L460 185"/>
+<path d="M340 410 L460 570"/>
+<path d="M710 175 L820 350"/>
+<path d="M710 595 L820 410"/>
+<path d="M1050 375 L1138 375"/>
+<path d="M460 625 C 330 650, 280 560, 272 432"/>
+<path d="M120 350 C 30 330, 30 420, 118 402"/>
+<path d="M1260 320 L1260 94 L160 94 L160 318"/>
+<path d="M935 430 L935 730 L200 730 L200 432"/>
+</g>
+
+<!-- labels -->
+<g font-size="13">
+<text x="400" y="240" text-anchor="end">Host pressed, create_server OK</text>
+<text x="400" y="257" text-anchor="end" fill="#5b6b7c">lobby.gd:88-109 · verified</text>
+<text x="420" y="470">Join, valid IP</text>
+<text x="420" y="487" fill="#5b6b7c">lobby.gd:112-124</text>
+<text x="775" y="215">peer_connected</text>
+<text x="775" y="232" fill="#5b6b7c">lobby.gd:28-35 · verified</text>
+<text x="775" y="560">peer_connected</text>
+<text x="775" y="577" fill="#5b6b7c">lobby.gd:28-35 · verified</text>
+<text x="1095" y="455" text-anchor="middle">score == 10</text>
+<text x="1095" y="472" text-anchor="middle" fill="#5b6b7c">pong.gd:39-49</text>
+<text x="1095" y="489" text-anchor="middle" fill="#5b6b7c">verified by fixture</text>
+<text x="345" y="690" text-anchor="middle">connection_failed, "Couldn't connect."</text>
+<text x="345" y="707" text-anchor="middle" fill="#5b6b7c">lobby.gd:51-56 · not verified</text>
+<text x="20" y="455">invalid IP · address in use</text>
+<text x="20" y="472" fill="#5b6b7c">lobby.gd:95-98,113-116</text>
+<text x="20" y="489" fill="#5b6b7c">invalid IP verified only</text>
+<text x="700" y="86" text-anchor="middle">Exit Game → game_finished → _end_game (pong.gd:52-53, lobby.gd:64-75) · verified, right-winner fixture</text>
+<text x="560" y="752" text-anchor="middle">peer_disconnected / server_disconnected → _end_game (lobby.gd:38-42, 59-60)</text>
+<text x="560" y="769" text-anchor="middle" fill="#5b6b7c">verified on host side only ("Client disconnected.")</text>
+</g>
+
+<!-- proposed tests -->
+<g stroke="#d24e42" stroke-width="2" stroke-dasharray="7 5" fill="none">
+<rect x="20" y="560" width="120" height="44" rx="6"/>
+<path d="M80 560 L80 500" marker-end="url(#r)"/>
+<rect x="510" y="672" width="130" height="44" rx="6"/>
+<path d="M510 694 L482 694" marker-end="url(#r)"/>
+<rect x="1080" y="700" width="170" height="44" rx="6"/>
+<path d="M1080 722 L940 722" marker-end="url(#r)"/>
+</g>
+<g font-size="12" fill="#d24e42" text-anchor="middle">
+<text x="80" y="580">T-12 proposed</text><text x="80" y="596">address in use</text>
+<text x="575" y="692">T-11 proposed</text><text x="575" y="708">no server listening</text>
+<text x="1165" y="720">T-10 proposed</text><text x="1165" y="736">client-side disconnect</text>
+</g>
+</g>
+</svg>
